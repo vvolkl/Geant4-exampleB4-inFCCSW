@@ -1,6 +1,7 @@
 
 gaudi_subdir(B4d v1r0)
 
+gaudi_depends_on_subdirs(GaudiAlg)
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
 # You can set WITH_GEANT4_UIVIS to OFF via the command line or ccmake/cmake-gui
@@ -32,9 +33,17 @@ message("sources:" ${sources})
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 
+add_library(libGeant4ExampleB4d ${sources} ${headers})
+target_link_libraries(libGeant4ExampleB4d ${Geant4_LIBRARIES})
+
 #
-gaudi_add_executable(exampleB4d exampleB4d.cc ${sources} ${headers} LINK_LIBRARIES Geant4)
-#link_libraries( ${Geant4_LIBRARIES})
+gaudi_add_executable(exampleB4d exampleB4d.cc  ${headers} LINK_LIBRARIES Geant4 )
+target_link_libraries(exampleB4d libGeant4ExampleB4d)
+
+gaudi_add_module(exampleB4dGaudiComponents
+                 components/*.cpp ${headers}
+                 INCLUDE_DIRS Geant4 
+                 LINK_LIBRARIES GaudiAlgLib Geant4 libGeant4ExampleB4d)
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
