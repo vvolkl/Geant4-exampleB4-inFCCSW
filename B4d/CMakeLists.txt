@@ -37,39 +37,12 @@ add_library(libGeant4ExampleB4d ${sources} ${headers})
 target_link_libraries(libGeant4ExampleB4d ${Geant4_LIBRARIES})
 
 #
-gaudi_add_executable(exampleB4d exampleB4d.cc  ${headers} LINK_LIBRARIES Geant4 )
-target_link_libraries(exampleB4d libGeant4ExampleB4d)
+# the exampleB4d executable is replaced by the SimG4Alg/SimG4Svc in FCCSW
+#gaudi_add_executable(exampleB4d exampleB4d.cc  ${headers} LINK_LIBRARIES Geant4 )
+#target_link_libraries(exampleB4d libGeant4ExampleB4d)
 
 gaudi_add_module(exampleB4dGaudiComponents
                  components/*.cpp ${headers}
                  INCLUDE_DIRS Geant4 
                  LINK_LIBRARIES GaudiAlgLib Geant4 libGeant4ExampleB4d)
 
-#----------------------------------------------------------------------------
-# Copy all scripts to the build directory, i.e. the directory in which we
-# build B4c. This is so that we can run the executable directly because it
-# relies on these scripts being in the current working directory.
-
-set(EXAMPLEB4D_SCRIPTS
-  exampleB4d.out
-  exampleB4.in
-  gui.mac
-  init_vis.mac
-  plotHisto.C
-  run1.mac
-  run2.mac
-  vis.mac
-  )
-
-foreach(_script ${EXAMPLEB4D_SCRIPTS})
-  configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
-endforeach()
-
-#----------------------------------------------------------------------------
-# Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
-#
-#install(TARGETS exampleB4d DESTINATION bin)
